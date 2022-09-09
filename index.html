@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Integration</title>
+  </head>
+  <body>
+    <h1>Namaste World</h1>
+    <button onclick="handleSubmit()">Get Verify</button>
+    <button onclick="handleCheck()">Check Verification</button>
+    <div class="verificationData" id="verificationData"></div>
+  </body>
+  <script>
+    let URL_ID = "";
+    const option_1 = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-API-KEY": "05147674ec5648e7a8b2dfb1d09d590f",
+      },
+      body: JSON.stringify({
+        template_id: "e241de4a-5e9c-4cfd-9c14-69f348e67b6d",
+        redirect_uri: "https://pepcorns.com/",
+      }),
+    };
+
+    async function handleSubmit() {
+      console.log("hello");
+      fetch(
+        "https://api-sandbox.aiprise.com/api/v1/verify/get_user_verification_url",
+        option_1
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          URL_ID = response.verification_url.replace(
+            "https://onboard-sandbox.aiprise.com/?verification_session_id=",
+            ""
+          );
+          console.log(response, URL_ID);
+          window.open(response.verification_url, "_blank");
+        })
+        .catch((err) => console.error(err));
+    }
+
+    const option_2 = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "X-API-KEY": "05147674ec5648e7a8b2dfb1d09d590f",
+      },
+    };
+
+    async function handleCheck() {
+      fetch(
+        `https://api-sandbox.aiprise.com/api/v1/verify/get_user_data_from_request/${URL_ID}`,
+        option_2
+      )
+        .then((response) => response.json())
+        .then((response) => console.log(response))
+        .catch((err) => console.error(err));
+    }
+  </script>
+</html>
